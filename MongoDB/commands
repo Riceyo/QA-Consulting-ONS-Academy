@@ -1,3 +1,7 @@
+show dbs -- show all databases with data
+
+db -- table you're in
+
 use testdatabase -- switch database
 
 db.testcollection.insert
@@ -9,10 +13,6 @@ db.testcollection.insert
 		}
 	)
 	
-db -- table you're in
-
-show dbs -- show all databases with data
-
 mongoimport --db primer --collection restaurants --drop --file c:\data\primer-dataset.json
 
 db.restaurants.find() -- return all from restaurants collection
