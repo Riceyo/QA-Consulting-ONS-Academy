@@ -1,4 +1,4 @@
-use testdatabase
+use testdatabase -- switch database
 
 db.testcollection.insert
 	(
