@@ -1,0 +1,98 @@
+use testdatabase
+
+db.testcollection.insert
+	(
+		{
+		name : "blah"
+		,city : "blah"
+		,county : "blah"
+		}
+	)
+	
+db -- table you're in
+
+show dbs -- show all databases with data
+
+mongoimport --db primer --collection restaurants --drop --file c:\data\primer-dataset.json
+
+db.restaurants.find() -- return all from restaurants collection
+
+db.restaurants.find().pretty() -- pretty format
+
+db.restaurants.insert({name : "Richmond FOOD", cuisine : "FOOD!", borough : "Cwmbranistan"})
+
+db.restaurants.find({
+    "name" : "Richmond FOOD"
+}).pretty();
+
+db.restaurants.find({
+    "name" : "Richmond FOOD"
+}).pretty();
+
+db.restaurants.find(
+{
+    name : "Richmond FOOD"
+}
+,
+{
+_id : 0
+}
+).pretty();
+
+db.restaurants.find({
+    "borough" : "Queens"
+}).pretty();
+
+db.restaurants.find({
+    "borough" : "Queens"
+    ,"cuisine" : "Italian"
+}).pretty();
+
+db.restaurants.find({
+    "grades.score" : {"$gt": 30}
+}).pretty();
+
+db.restaurants.find(
+	{}
+	).limit(2).sort({
+    "grades.score": -1
+}).pretty();
+
+use movielens
+mongoimport --db movielens --collection movies --drop --file c:\data\movielens_movies.json
+mongoimport --db movielens --collection users --drop --file c:\data\movielens_users.json
+
+db.movies.find().pretty()
+
+db.users.find().pretty()
+
+db.users.find(
+{}
+,{movies : {$slice : 3}}
+).limit(1).pretty()
+
+db.movies.find().count()
+
+db.users.find(
+{name: "Barry Erin"}
+,{name: 1, occupation: 1}
+).pretty()
+
+db.users.distinct(occupation)
+
+db.users.count({occupation : "scientist"})
+
+db.users.find({occupation : "writer"}, {name : 1, age : 1}).limit(10).sort({age : -1})
+
+db.users.update({occupation : "writer"}, {$set:{occupation : "author"}}, {multi : true})
+
+db.users.insert({name : "Richmond Rice", gender : "M", age : 34, occupation : "Software Engineer"})
+
+db.users.find({name : "Richmond Rice"}, {}).pretty()
+
+db.users.update({name : "Richmond Rice"}, {$set : {movies : [{movieid : 1419, rating : 5}]}})
+
+db.users.remove({name : "Richmond Rice"})
+
+use rentallibrary
+mongoimport --db rentallibrary --collection products --drop --file c:\data\rentallibraryproducts.json
