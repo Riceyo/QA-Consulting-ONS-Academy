@@ -3,11 +3,14 @@ hadoop fs -mkdir /hive/
 
 -- check contents of hdfs
 hadoop fs -ls /
+hadoop fs -ls /hive/
 
--- put file from local disc to hdfs
+-- put file from local disk to hdfs
 hadoop fs -put /home/cloudera/Desktop/ml-100k/u.user /hive/
 
--- create external table if doesn't exist - metadata ..?
+-- create external table if doesn't exist
+-- when external table is dropped, only the meta data is dropped, doesn't touch the actual data
+hive>
 CREATE EXTERNAL TABLE IF NOT EXISTS userinfo
 (
 userid int
@@ -22,19 +25,21 @@ LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
 -- load data into hive hdfs table - overwrite if already exists
+hive>
 LOAD DATA INPATH '/hive/u.user' OVERWRITE INTO TABLE userinfo;
 
 -- query table
+hive>
 select count(*) from userinfo;
-
--- query table
 select occupation, count(*) from userinfo group by occupation;
 
 -- drop table
-drop table item;
+hive>
+drop table userinfo;
 
--- create non external table if doesn't exist
-CREATE TABLE IF NOT EXISTS item
+-- create internal table if doesn't exist
+hive>
+CREATE TABLE IF NOT EXISTS movies
 (
 MovieID int
 ,MovieTitle string
@@ -67,27 +72,31 @@ LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
 -- see details of the table
-describe item;
+hive>
+describe movies;
 
 -- see further details of the table
-describe formatted item;
+hive>
+describe formatted movies;
 
--- put file from local disc to hdfs
+-- put file from local disk to hdfs
 hadoop fs -put /home/cloudera/Desktop/ml-100k/u.item /hive/
 
 -- load data into hive hdfs table - overwrite if already exists
-LOAD DATA INPATH '/hive/u.item' OVERWRITE INTO TABLE item;
+hive>
+LOAD DATA INPATH '/hive/u.item' OVERWRITE INTO TABLE movies;
 
 -- check contents of hdfs
+-- file should be gone after data has been loaded
 hadoop fs -ls /hive/
 
 -- query table
+hive>
 select * from item;
-
--- query table
 select movietitle, releasedate from item where genrechildrens = '1' order by releasedate desc limit 10;
 
 -- create table with complex fields
+hive>
 CREATE TABLE customers
 (
 cust_id INT
@@ -104,6 +113,7 @@ COLLECTION ITEMS TERMINATED BY ','
 MAP KEYS TERMINATED BY ':';
 
 -- create table with complex fields
+hive>
 CREATE TABLE Products
 (
 id INT
@@ -111,13 +121,15 @@ id INT
 ,ProductColorOptions ARRAY<STRING>
 );
 
--- insert data into table with complex fields 
+-- insert data into table with complex fields
+hive>
 INSERT INTO TABLE Products
 SELECT 1, 'Widgets', array('Red', 'Blue', 'Green')
 UNION ALL
 SELECT 2, 'Cogs', array('Blue', 'Green', 'Yellow');
 
 -- query table with complex fields
+hive>
 SELECT id, productname, productcoloroptions FROM products;
 
 -- impala web ui
@@ -128,7 +140,8 @@ hadoop fs -put /home/cloudera/Desktop/tags.csv /hive/
 hadoop fs -put /home/cloudera/Desktop/movies.csv /hive/
 hadoop fs -put /home/cloudera/Desktop/ratings.csv /hive/
 
--- create tags table
+-- create movielens tags table
+hive>
 CREATE TABLE IF NOT EXISTS tags
 (
 userid int
@@ -141,7 +154,8 @@ FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
--- create movies table
+-- create movielens movies table
+hive>
 CREATE TABLE IF NOT EXISTS movies
 (
 movieid int
@@ -154,7 +168,8 @@ COLLECTION ITEMS TERMINATED BY '|'
 LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
--- create ratings table
+-- create movielens ratings table
+hive>
 CREATE TABLE IF NOT EXISTS ratings
 (
 userid int
@@ -168,20 +183,26 @@ LINES TERMINATED BY '\n'
 STORED AS TEXTFILE;
 
 -- load movielens data into hive hdfs movielens tables
+hive>
 LOAD DATA INPATH '/hive/tags.csv' OVERWRITE INTO TABLE tags;
 LOAD DATA INPATH '/hive/movies.csv' OVERWRITE INTO TABLE movies;
 LOAD DATA INPATH '/hive/ratings.csv' OVERWRITE INTO TABLE ratings;
 
 -- query movielens tables
+hive>
 select * from tags;
 select * from movies;
 select * from ratings;
 
--- make lower case, breakup words, n-gram
+-- make the tags data lower case (lower)
+-- breakup the tags data (sentences)
+-- n-gram the tags
+hive>
 SELECT EXPLODE(c(SENTENCES(LOWER(tag)),2,5)) AS ngrams FROM tags;
 SELECT EXPLODE(NGRAMS(SENTENCES(LOWER(tag)),3,5)) AS ngrams FROM tags;
 
 -- tags for highly rated films
+hive>
 SELECT EXPLODE(NGRAMS(SENTENCES(LOWER(tag)),3,5)) AS ngrams
 FROM tags
 JOIN ratings on ratings.movieid = tags.movieid
