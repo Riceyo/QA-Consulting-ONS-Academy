@@ -38,7 +38,7 @@ Package: *
 Pin: release o=Cloudera, l=Cloudera
 Pin-Priority: 501
 
--- install hadoop in pseudo-distributed mode
+-- install hadoop in pseudo-distributed mode on orange node
 sudo apt-get install -y hadoop-conf-pseudo
 
 -- install java
@@ -87,6 +87,148 @@ windows terminal>
 pscp c:\shakespeare.txt ubuntu@35.176.172.83:/tmp
 
 -- move test data and check contents
- hadoop fs –mkdir /user/ubuntu/input/
- hadoop fs –put shakespeare.txt /user/ubuntu/input/
- hadoop fs –tail /user/ubuntu/input/shakespeare.txt
+hadoop fs –mkdir /user/ubuntu/input/
+hadoop fs –put shakespeare.txt /user/ubuntu/input/
+hadoop fs –tail /user/ubuntu/input/shakespeare.txt
+
+-- check test data file permissions
+hadoop fs –ls /user/ubuntu/input/shakespeare.txt
+
+-- check web ui
+http://ip:50070
+
+-- stop services
+sudo service hadoop-hdfs-namenode stop
+sudo service hadoop-hdfs-secondarynamenode stop
+sudo service hadoop-hdfs-datanode stop
+sudo service hadoop-yarn-resourcemanager stop
+sudo service hadoop-yarn-nodemanager stop
+sudo service hadoop-mapreduce-historyserver stop
+
+-- delete logs
+sudo rm –rf /var/log/hadoop-*/*
+
+-- remove some of the services not required for this node as now setting up the cluster
+sudo apt-get remove hadoop-hdfs-secondarynamenode
+sudo apt-get remove hadoop-yarn-resourcemanager
+sudo apt-get remove hadoop-mapreduce-historyserver
+
+-- install secondary name node on blue node
+sudo apt-get install hadoop-hdfs-secondarynamenode
+
+-- install data node on blue, green, pink
+sudo apt-get install hadoop-hdfs-datanode
+
+-- install resource manager on green
+sudo apt-get install hadoop-yarn-resourcemanager
+
+-- install node manager on blue
+sudo apt-get install hadoop-yarn-nodemanager
+
+-- install job history server on pink
+sudo apt-get install hadoop-mapreduce-historyserver
+
+-- update core site xml config file
+nano /etc/hadoop/conf/core-site.xml
+  <configuration>
+    <property>
+      <name>fs.defaultFS</name>
+      <value>hdfs://orangeint:8020</value>
+    </property>
+  </configuration>
+
+-- update hdfs site xml config file
+nano /etc/hadoop/conf/hdfs-site.xml
+  <configuration>
+    <property>
+      <name>dfs.namenode.name.dir</name>
+      <value>file:///disk1/dfs/nn, file:///disk2/dfs/nn</value>
+    </property>
+    <property>
+      <name>dfs.datanode.data.dir</name>
+      <value>file:///disk1/dfs/dn, file:///disk2/dfs/dn</value>
+    </property>
+    <property>
+      <name>ddfs.replication</name>
+      <value>3</value>
+    </property>
+  </configuration>
+
+-- update yarn site xml config file
+nano /etc/hadoop/conf/yarn-site.xml
+  <configuration>
+    <property>
+      <name>yarn.resourcemanager.hostname</name>
+      <value>greenint</value>
+    </property>
+    <property>
+      <name>yarn.application.classpath</name>
+      <value>
+        $HADOOP_HOME\etc\hadoop, 
+        $HADOOP_HOME\share\hadoop\common\*, 
+        $HADOOP_HOME\share\hadoop\common\lib\*, 
+        $HADOOP_HOME\share\hadoop\hdfs\*, 
+        $HADOOP_HOME\share\hadoop\hdfs\lib\*, 
+        $HADOOP_HOME\share\hadoop\mapreduce\*, 
+        $HADOOP_HOME\share\hadoop\mapreduce\lib\*, 
+        $HADOOP_HOME\share\hadoop\yarn\*, 
+        $HADOOP_HOME\share\hadoop\yarn\lib\* 
+      </value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.aux-services</name>
+      <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.local-dirs</name>
+      <value>file:///disk1/nodemgr/local, file:///disk2/nodemgr/local</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.log-dirs</name>
+      <value>/var/log/hadoop-yarn/containers</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.remote-app-log-dir</name>
+      <value>/var/log/hadoop-yarn/apps</value>
+    </property>
+    <property>
+      <name>yarn.log-aggregation-enable</name>
+      <value>true</value>
+    </property>
+  </configuration>
+
+-- update mapred site xml config file
+nano /etc/hadoop/conf/mapred-site.xml
+  <configuration>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
+    <property>
+      <name></name>
+      <value></value>
+    </property>
