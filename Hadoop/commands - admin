@@ -1,0 +1,24 @@
+35.176.218.238 
+35.176.249.12 
+35.176.255.98 
+35.176.230.34 
+
+deb [arch=amd64] http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5 contrib
+deb-src http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5 contrib
+
+sudo -u hdfs hadoop fs -mkdir /tmp
+sudo -u hdfs hadoop fs -mkdir -p /tmp/hadoopyarn/staging/history/done_intermediate
+sudo -u hdfs hadoop fs -chown -R mapred:mapred /tmp/hadoopyarn/staging
+sudo -u hdfs hadoop fs -chmod -R 1777 /tmp
+
+sudo -u hdfs hadoop fs -mkdir -p /var/log/hadoop-yarn
+
+sudo -u hdfs hadoop fs -chown yarn:mapred /var/log/hadoop-yarn
+sudo service hadoop-yarn-resourcemanager start
+sudo service hadoop-yarn-nodemanager start
+sudo service hadoop-mapreduce-historyserver start
+
+sudo -u hdfs hadoop fs -mkdir -p /user/ubuntu
+sudo -u hdfs hadoop fs -chown ubuntu /user/ubuntu
+
+pscp c:\shakespeare.txt ubuntu@35.176.172.83:/tmp
