@@ -55,20 +55,38 @@ nano hdfs-site.xml
 nano core-site.xml
 nano mapred-site.xml
 
+-- start hadoop hdfs daemons
+sudo service hadoop-hdfs-namenode start
+sudo service hadoop-hdfs-secondarynamenode start
+sudo service hadoop-hdfs-datanode start 
+
+-- create staging directory and set permissions
 sudo -u hdfs hadoop fs -mkdir /tmp
 sudo -u hdfs hadoop fs -mkdir -p /tmp/hadoopyarn/staging/history/done_intermediate
 sudo -u hdfs hadoop fs -chown -R mapred:mapred /tmp/hadoopyarn/staging
 sudo -u hdfs hadoop fs -chmod -R 1777 /tmp
 
+-- create yarn log directory and set permissions
 sudo -u hdfs hadoop fs -mkdir -p /var/log/hadoop-yarn
-
 sudo -u hdfs hadoop fs -chown yarn:mapred /var/log/hadoop-yarn
 
+-- start yarn and mapreduce daemons
 sudo service hadoop-yarn-resourcemanager start
 sudo service hadoop-yarn-nodemanager start
 sudo service hadoop-mapreduce-historyserver start
 
+-- check deamons are running
+sudo jps 
+
+-- create user directory and set permissions
 sudo -u hdfs hadoop fs -mkdir -p /user/ubuntu
 sudo -u hdfs hadoop fs -chown ubuntu /user/ubuntu
 
+-- upload test data (shakespeare.txt) to the node
+windows terminal>
 pscp c:\shakespeare.txt ubuntu@35.176.172.83:/tmp
+
+-- move test data and check contents
+ hadoop fs –mkdir /user/ubuntu/input/
+ hadoop fs –put shakespeare.txt /user/ubuntu/input/
+ hadoop fs –tail /user/ubuntu/input/shakespeare.txt
