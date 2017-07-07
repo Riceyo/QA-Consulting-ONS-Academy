@@ -1,13 +1,29 @@
-ip orange
-ip blue
-ip green
-ip pink
+-- get eth0 ip addresses
+ifconfig 
 
-ip orangeint
-ip blueint
-ip greenint
-ip pinkint
+-- edit the hosts file
+sudo vi /etc/hosts
 
+aws ip orange
+aws ip blue
+aws ip green
+aws ip pink
+
+eth0 ip orangeint
+eth0 ip blueint
+eth0 ip greenint
+eth0 ip pinkint
+
+-- ping each other
+ping orange
+ping blue
+ping green
+ping pink
+
+-- create repo source file
+sudo vi /etc/apt/sources.list.d/cloudera.list
+
+-- update the repo source file
 deb [arch=amd64] http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5 contrib
 deb-src http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5 contrib
 
