@@ -84,7 +84,7 @@ sudo -u hdfs hadoop fs -chown ubuntu /user/ubuntu
 
 -- upload test data (shakespeare.txt) to the node
 windows terminal>
-pscp c:\shakespeare.txt ubuntu@35.176.172.83:/tmp
+pscp c:\shakespeare.txt ubuntu@ip:/tmp
 
 -- move test data and check contents
 hadoop fs –mkdir /user/ubuntu/input/
@@ -201,34 +201,40 @@ nano /etc/hadoop/conf/yarn-site.xml
 nano /etc/hadoop/conf/mapred-site.xml
   <configuration>
     <property>
-      <name></name>
-      <value></value>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
     </property>
     <property>
-      <name></name>
-      <value></value>
+      <name>mapreduce.jobhistory.address</name>
+      <value>pinkint:10020</value>
     </property>
     <property>
-      <name></name>
-      <value></value>
+      <name>mapreduce.jobhistory.webapp.address</name>
+      <value>pinkint:19888</value>
     </property>
     <property>
-      <name></name>
-      <value></value>
+      <name>yarn.app.mapreduce.am.staging-dir</name>
+      <value>/user</value>
     </property>
-    <property>
-      <name></name>
-      <value></value>
-    </property>
-    <property>
-      <name></name>
-      <value></value>
-    </property>
-    <property>
-      <name></name>
-      <value></value>
-    </property>
-    <property>
-      <name></name>
-      <value></value>
-    </property>
+  </configuration>
+   
+-- create script to reduce daemons heapsize
+nano /etc/hadoop/conf/hadoop-env.sh
+export HADOOP_NAMENODE_OPTS="-Xmx64m"
+export HADOOP_SECONDARYNAMENODE_OPTS="-Xmx64m"
+export HADOOP_DATANODE_OPTS="-Xmx64m"
+export YARN_RESOURCEMANAGER_OPTS="-Xmx64m"
+export YARN_NODEMANAGER_OPTS="-Xmx64m"
+export HADOOP_JOB_HISTORYSERVER_OPTS="-Xmx64m"
+
+-- upload key pair file to all the nodes
+windows terminal>
+pscp c:\BigDataKeyPair.pem ubuntu@ip:/tmp
+
+-- update key pair file permissions
+sudo chmod 400 BigDataKeyPair.pem
+
+-- copy site xml config files to other nodes and set file permissions
+sudo scp -i BigDataKeyPair.pem /etc/hadoop/conf/blah-site.xml ubuntu@nodecolour:/home/ubuntu
+sudo mv blah-site.xml /etc/hadoop/conf/blah-site.xml
+sudo chown root:hadoop /etc/hadoop/conf/blah-site.xml
