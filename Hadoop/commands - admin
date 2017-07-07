@@ -27,6 +27,34 @@ sudo vi /etc/apt/sources.list.d/cloudera.list
 deb [arch=amd64] http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5 contrib
 deb-src http://archive.cloudera.com/cdh5/ubuntu/trusty/amd64/cdh trusty-cdh5 contrib
 
+-- update repos
+sudo apt-get update
+
+-- create repo preferences for cloudera
+sudo vi /etc/apt/preferences.d/cloudera.pref
+
+-- update repo cloudera preferences
+Package: *
+Pin: release o=Cloudera, l=Cloudera
+Pin-Priority: 501
+
+-- install hadoop in pseudo-distributed mode
+sudo apt-get install -y hadoop-conf-pseudo
+
+-- install java
+sudo apt-get install -y openjdk-7-jdk 
+sudo apt-get install -y openjdk-7-jre
+
+-- format namenode
+sudo –u hdfs hdfs namenode -format
+
+-- view hadoop configuration files
+cd /etc/hadoop/conf
+ls
+nano hdfs-site.xml
+nano core-site.xml
+nano mapred-site.xml
+
 sudo -u hdfs hadoop fs -mkdir /tmp
 sudo -u hdfs hadoop fs -mkdir -p /tmp/hadoopyarn/staging/history/done_intermediate
 sudo -u hdfs hadoop fs -chown -R mapred:mapred /tmp/hadoopyarn/staging
