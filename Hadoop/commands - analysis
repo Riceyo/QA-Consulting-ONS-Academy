@@ -196,12 +196,12 @@ select * from ratings;
 
 -- make the tags data lower case (lower)
 -- breakup the tags data (sentences)
--- n-gram the tags
+-- n-gram the tags, probability...
 hive>
 SELECT EXPLODE(c(SENTENCES(LOWER(tag)),2,5)) AS ngrams FROM tags;
 SELECT EXPLODE(NGRAMS(SENTENCES(LOWER(tag)),3,5)) AS ngrams FROM tags;
 
--- tags for highly rated films
+-- tags n-gram for highly rated films
 hive>
 SELECT EXPLODE(NGRAMS(SENTENCES(LOWER(tag)),3,5)) AS ngrams
 FROM tags
