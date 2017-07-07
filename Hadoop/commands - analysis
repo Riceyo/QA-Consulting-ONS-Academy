@@ -1,0 +1,188 @@
+-- make hdfs folder
+hadoop fs -mkdir /hive/
+
+-- check contents of hdfs
+hadoop fs -ls /
+
+-- put file from local disc to hdfs
+hadoop fs -put /home/cloudera/Desktop/ml-100k/u.user /hive/
+
+-- create external table if doesn't exist - metadata ..?
+CREATE EXTERNAL TABLE IF NOT EXISTS userinfo
+(
+userid int
+,age int
+,gender string
+,occupation string
+,zipcode string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+-- load data into hive hdfs table - overwrite if already exists
+LOAD DATA INPATH '/hive/u.user' OVERWRITE INTO TABLE userinfo;
+
+-- query table
+select count(*) from userinfo;
+
+-- query table
+select occupation, count(*) from userinfo group by occupation;
+
+-- drop table
+drop table item;
+
+-- create non external table if doesn't exist
+CREATE TABLE IF NOT EXISTS item
+(
+MovieID int
+,MovieTitle string
+,ReleaseDate string
+,VideoReleaseDate string
+,IMDbURL string
+,GenreUnknown string
+,GenreAction string
+,GenreAdventure string
+,GenreAnimation string
+,GenreChildrens string
+,GenreComedy string
+,GenreCrime string
+,GenreDocumentary string
+,GenreDrama string
+,GenreFantasy string
+,GenreFilmNoir string
+,GenreHorror string
+,GenreMusical string
+,GenreMystery string
+,GenreRomance string
+,GenreSciFi string
+,GenreThriller string
+,GenreWar string
+,GenreWestern string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+-- see details of the table
+describe item;
+
+-- see further details of the table
+describe formatted item;
+
+-- put file from local disc to hdfs
+hadoop fs -put /home/cloudera/Desktop/ml-100k/u.item /hive/
+
+-- load data into hive hdfs table - overwrite if already exists
+LOAD DATA INPATH '/hive/u.item' OVERWRITE INTO TABLE item;
+
+-- check contents of hdfs
+hadoop fs -ls /hive/
+
+-- query table
+select * from item;
+
+-- query table
+select movietitle, releasedate from item where genrechildrens = '1' order by releasedate desc limit 10;
+
+-- create table with complex fields
+CREATE TABLE customers
+(
+cust_id INT
+,fname STRING
+,lname STRING
+,email STRING
+,phone MAP <STRING, STRING>
+,order_ids ARRAY <INT>
+,order_value STRUCT <min:INT, max:INT, avg:INT, total:INT>
+)
+ROW FORMAT
+DELIMITED FIELDS TERMINATED BY '|'
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':';
+
+-- create table with complex fields
+CREATE TABLE Products
+(
+id INT
+,ProductName STRING
+,ProductColorOptions ARRAY<STRING>
+);
+
+-- insert data into table with complex fields 
+INSERT INTO TABLE Products
+SELECT 1, 'Widgets', array('Red', 'Blue', 'Green')
+UNION ALL
+SELECT 2, 'Cogs', array('Blue', 'Green', 'Yellow');
+
+-- query table with complex fields
+SELECT id, productname, productcoloroptions FROM products;
+
+-- impala web ui
+http://quickstart.cloudera:8888/notebook/editor?type=impala
+
+-- put movielens data into hdfs
+hadoop fs -put /home/cloudera/Desktop/tags.csv /hive/
+hadoop fs -put /home/cloudera/Desktop/movies.csv /hive/
+hadoop fs -put /home/cloudera/Desktop/ratings.csv /hive/
+
+-- create tags table
+CREATE TABLE IF NOT EXISTS tags
+(
+userid int
+,movieid int
+,tag string
+,timestamp string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+-- create movies table
+CREATE TABLE IF NOT EXISTS movies
+(
+movieid int
+,title string
+,genres array <string>
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY '|'
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+-- create ratings table
+CREATE TABLE IF NOT EXISTS ratings
+(
+userid int
+,movieid int
+,rating decimal
+,timestamp string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+STORED AS TEXTFILE;
+
+-- load movielens data into hive hdfs movielens tables
+LOAD DATA INPATH '/hive/tags.csv' OVERWRITE INTO TABLE tags;
+LOAD DATA INPATH '/hive/movies.csv' OVERWRITE INTO TABLE movies;
+LOAD DATA INPATH '/hive/ratings.csv' OVERWRITE INTO TABLE ratings;
+
+-- query movielens tables
+select * from tags;
+select * from movies;
+select * from ratings;
+
+-- make lower case, breakup words, n-gram
+SELECT EXPLODE(c(SENTENCES(LOWER(tag)),2,5)) AS ngrams FROM tags;
+SELECT EXPLODE(NGRAMS(SENTENCES(LOWER(tag)),3,5)) AS ngrams FROM tags;
+
+-- tags for highly rated films
+SELECT EXPLODE(NGRAMS(SENTENCES(LOWER(tag)),3,5)) AS ngrams
+FROM tags
+JOIN ratings on ratings.movieid = tags.movieid
+WHERE rating > 3;
