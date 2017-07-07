@@ -1,98 +1,95 @@
-show dbs -- show all databases with data
+-- show all databases with data
+show dbs
 
-db -- table you're in
+-- show the databases you're currently using
+db
 
-use testdatabase -- switch database
+-- switch database, doesn't have to already exist
+use testdatabase
 
-db.testcollection.insert
-	(
-		{
-		name : "blah"
-		,city : "blah"
-		,county : "blah"
-		}
-	)
+-- show tables (collections) in the database you're currently using
+show tables
+
+-- insert data into testcollectin table/collection
+-- any fields can be inserted, give the field name and it's value (field : value)
+db.testcollection.insert({name : "blah", city : "blah", county : "blah"})
 	
+-- import data via mongoimport
 mongoimport --db primer --collection restaurants --drop --file c:\data\primer-dataset.json
 
-db.restaurants.find() -- return all from restaurants collection
+-- query everything in restaurants
+db.restaurants.find()
 
-db.restaurants.find().pretty() -- pretty format
+-- query everything in restaurants and display in pretty format
+db.restaurants.find().pretty()
 
+-- insert data into restaurants
 db.restaurants.insert({name : "Richmond FOOD", cuisine : "FOOD!", borough : "Cwmbranistan"})
 
-db.restaurants.find({
-    "name" : "Richmond FOOD"
-}).pretty();
+-- query restaurants with where like clause
+db.restaurants.find({"name" : "Richmond FOOD"}).pretty();
 
-db.restaurants.find({
-    "name" : "Richmond FOOD"
-}).pretty();
+-- query restaurants with where like clause, return all fields except id
+db.restaurants.find({name : "Richmond FOOD"}, {_id : 0}).pretty();
 
-db.restaurants.find(
-{
-    name : "Richmond FOOD"
-}
-,
-{
-_id : 0
-}
-).pretty();
+-- query restaurants with where like clause
+db.restaurants.find({"borough" : "Queens"}).pretty();
 
-db.restaurants.find({
-    "borough" : "Queens"
-}).pretty();
+-- query restaurants with multiple where like clause
+db.restaurants.find({"borough" : "Queens", "cuisine" : "Italian"}).pretty();
 
-db.restaurants.find({
-    "borough" : "Queens"
-    ,"cuisine" : "Italian"
-}).pretty();
+-- query with greater than clause
+db.restaurants.find({"grades.score" : {"$gt": 30}}).pretty();
 
-db.restaurants.find({
-    "grades.score" : {"$gt": 30}
-}).pretty();
+-- top two restaurants by score (1 ascending, -1 descending)
+db.restaurants.find({}).limit(2).sort({"grades.score": -1}).pretty();
 
-db.restaurants.find(
-	{}
-	).limit(2).sort({
-    "grades.score": -1
-}).pretty();
-
+-- switch database
 use movielens
+
+-- import data via mongoimport
 mongoimport --db movielens --collection movies --drop --file c:\data\movielens_movies.json
 mongoimport --db movielens --collection users --drop --file c:\data\movielens_users.json
 
+-- query what has been imported
 db.movies.find().pretty()
-
 db.users.find().pretty()
 
-db.users.find(
-{}
-,{movies : {$slice : 3}}
-).limit(1).pretty()
+-- query limiting results from array field (slice) and limiting results from the collection (limit)
+db.users.find({}, {movies : {$slice : 3}}).limit(1).pretty()
 
+-- return count of rows (documents) in the movies table (collection)
 db.movies.find().count()
 
-db.users.find(
-{name: "Barry Erin"}
-,{name: 1, occupation: 1}
-).pretty()
+-- query users with where clause and return specific columns (fields)
+db.users.find({name: "Barry Erin"}, {name: 1, occupation: 1}).pretty()
 
-db.users.distinct(occupation)
+-- show the unique occupations in users
+db.users.distinct("occupation")
 
+-- show count of how many scientists are in the data
 db.users.count({occupation : "scientist"})
 
+-- show the oldest writers in the data
 db.users.find({occupation : "writer"}, {name : 1, age : 1}).limit(10).sort({age : -1})
 
+-- update writers to authors
 db.users.update({occupation : "writer"}, {$set:{occupation : "author"}}, {multi : true})
 
+-- insert myself
 db.users.insert({name : "Richmond Rice", gender : "M", age : 34, occupation : "Software Engineer"})
 
+-- query myself
 db.users.find({name : "Richmond Rice"}, {}).pretty()
 
+-- insert (update) data in my movies array field 
 db.users.update({name : "Richmond Rice"}, {$set : {movies : [{movieid : 1419, rating : 5}]}})
 
+-- delete myself
 db.users.remove({name : "Richmond Rice"})
 
+-- switch database
 use rentallibrary
+
+-- import data via mongoimport
 mongoimport --db rentallibrary --collection products --drop --file c:\data\rentallibraryproducts.json
