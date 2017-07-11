@@ -22,6 +22,6 @@ rddoddoreven = rdd.map(oddoreven)  # apply function to each element in a new rdd
 datasquare = rddsquare.collect() # read the newly created rdd (action)
 datahalf = rddhalf.collect() # read the newly created rdd (action)
 dataoddoreven = rddoddoreven.collect() # read the newly created rdd (action)
-print(datasquare)
-print(datahalf)
-print(dataoddoreven)
+print datasquare
+print datahalf
+print dataoddoreven
