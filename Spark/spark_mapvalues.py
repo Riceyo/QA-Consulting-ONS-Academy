@@ -12,4 +12,4 @@ salaries = [['rich', 19000], ['luke', 21000], ['dave', 22000]]
 rdd = sc.parallelize(salaries)
 rddnewsal = rdd.mapValues(SalaryBonus)
 data = rddnewsal.collect()
-print(data)
+print data
