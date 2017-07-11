@@ -14,7 +14,7 @@ def oddoreven(x):
 
 conf = SparkConf()
 sc = SparkContext(conf = conf)
-list = [1, 2, 3, 4, 5]
+list = [1, 2, 3, 4, 5, 10, 20, 50]
 rdd = sc.parallelize(list)
 rddsquare = rdd.map(square) # apply function to each element in a new rdd (transform)
 rddhalf = rdd.map(half) # apply function to each element in a new rdd (transform)
