@@ -2,7 +2,7 @@ from pyspark import SparkConf, SparkContext
 
 def GetMarks(rec):
 	record = rec.split(",")
-	return record[0], record[2]
+	return record[0], record[2] # removes the subject columns
 
 def SumMarks(a, b):
 	return int(a) + int(b)
