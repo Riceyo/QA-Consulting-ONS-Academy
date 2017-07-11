@@ -13,8 +13,8 @@ rddjobsfilthead = rddjobs.filter(lambda line: line != rddjobsheader)
 datajobsdistcount = rddjobs.distinct().count()
 datajobscountbyval = rddjobs.countByValue()
 datajobsfiltheadcountbyval = rddjobsfilthead.countByValue()
-print(datajobsdistcount)
-print(datajobscountbyval)
+print datajobsdistcount
+print datajobscountbyval
 for x in datajobscountbyval:
 	print x, datajobscountbyval[x]
 for x in datajobsfiltheadcountbyval:
