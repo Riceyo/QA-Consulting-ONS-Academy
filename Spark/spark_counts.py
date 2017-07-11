@@ -8,4 +8,4 @@ datacount = rdd.count()
 datacountbyval =  rdd.countByValue()
 print(datacount)
 for key in datacountbyval:
-	print(key, "-", datacountbyval[key])
+	print key, "-", datacountbyval[key]
