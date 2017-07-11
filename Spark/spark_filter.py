@@ -12,4 +12,4 @@ list = [1, 2, 3, 11, 12, 13]
 rdd = sc.parallelize(list)
 rddfilt = rdd.filter(overtenchecker) # filter rdd elements into new rdd
 data = rddfilt.collect()
-print(data)
+print data
