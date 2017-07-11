@@ -22,4 +22,4 @@ rddfemale = rdd.filter(GetFemale)
 malecount = rddmale.count()
 femalecount = rddfemale.count()
 print "males -", malecount
-print "females ", femalecount
+print "females -", femalecount
