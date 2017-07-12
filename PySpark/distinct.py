@@ -1,8 +1,8 @@
 from pyspark import SparkConf, SparkContext
 
-def GetJobs(rec):
-	record = rec.split("|")
-	return(record[3])
+def GetJobs(x):
+	split = x.split("|")
+	return split[3]
 
 conf = SparkConf()
 sc = SparkContext(conf = conf)
