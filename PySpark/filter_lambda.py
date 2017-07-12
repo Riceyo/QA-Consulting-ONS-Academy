@@ -4,6 +4,6 @@ conf = SparkConf()
 sc = SparkContext(conf = conf)
 list = [1, 2, 3, 21, 22, 23]
 rdd = sc.parallelize(list)
-rddfilt = rdd.filter(lambda x: True if x > 10 else False)
+rddfilt = rdd.filter(lambda x: True if x > 10 else False) # filter new rdd via lambda function
 data = rddfilt.collect()
 print data
