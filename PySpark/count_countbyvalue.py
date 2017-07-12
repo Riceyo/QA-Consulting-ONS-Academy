@@ -7,5 +7,5 @@ rdd = sc.parallelize(list)
 datacount = rdd.count()
 datacountbyval =  rdd.countByValue()
 print(datacount)
-for key in datacountbyval:
-	print key, "-", datacountbyval[key]
+for x in datacountbyval:
+	print x, "-", datacountbyval[x]
