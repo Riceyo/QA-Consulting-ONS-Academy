@@ -10,7 +10,7 @@ rdd = sc.textFile("file:///home/cloudera/Users.txt")
 rddjobs = rdd.map(GetJobs)
 rddjobsheader = rddjobs.first()
 rddjobsfilthead = rddjobs.filter(lambda line: line != rddjobsheader)
-datajobsdistcount = rddjobs.distinct().count()
+datajobsdistcount = rddjobs.distinct().count() # return count of unique rows in the rdd
 datajobscountbyval = rddjobs.countByValue()
 datajobsfiltheadcountbyval = rddjobsfilthead.countByValue()
 print datajobsdistcount
