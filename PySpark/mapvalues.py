@@ -8,8 +8,8 @@ def SalaryBonus(x):
 
 conf = SparkConf()
 sc = SparkContext(conf = conf)
-salaries = [['Richmond', 19000], ['Luke', 21000], ['David', 22000]]
+salaries = [['Richmond', 19000], ['Luke', 21000], ['David', 22000]] # create key pair list
 rdd = sc.parallelize(salaries)
-rddnewsal = rdd.mapValues(SalaryBonus) # apply function to every value in the rdd
+rddnewsal = rdd.mapValues(SalaryBonus) # apply function to every value in the rdd [key, value]
 data = rddnewsal.collect()
 print data
