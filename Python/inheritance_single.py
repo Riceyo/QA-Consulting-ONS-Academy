@@ -19,7 +19,6 @@ class grandchild(child):
         parent.printparent(self)  # same but specify class
         child.printparent(self)  # child has inherited parent
 
-
 blah = grandchild()
 blah.printparent()
 blah.printchild()
