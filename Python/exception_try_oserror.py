@@ -9,4 +9,3 @@ else:
     print("no exception")
 finally:
     print("always runs")
-
