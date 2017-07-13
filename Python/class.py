@@ -6,6 +6,5 @@ class classname:
     def add(self, a, b):
         print(a + b)
 
-
 ref = classname()
 ref.message()
