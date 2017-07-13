@@ -14,10 +14,10 @@ for moviesloop in datamovies: # loop the movies
 	ratingcount5 = 0 # reset the rating 5 counter
 	for ratingsloop in dataratings: # loop the ratings		
 		if moviesloop[0] == ratingsloop[1]: # if the movie id matches in both data sets	
-			if ratingsloop[2] == "5": # if a rating is 5
-				ratingcount5 = ratingcount5 + 1 # add to the rating 5 counter
-	if ratingcount5 > ratingcount5most: # keep a running total of the most ratings
-		ratingcount5most = ratingcount5 
-		ratingcount5mostmovie = moviesloop[1]
+			if ratingsloop[2] == "5": # if a rating 5
+				ratingcount5 = ratingcount5 + 1 # add to rating 5 counter
+	if ratingcount5 > ratingcount5most: # if more 5 ratings that the previous highest
+		ratingcount5most = ratingcount5 # keep running total of most 5 ratings
+		ratingcount5mostmovie = moviesloop[1] # keep name of the movie with the current most 5 ratings
 
 print ratingcount5mostmovie, ratingcount5most
