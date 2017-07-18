@@ -6,9 +6,9 @@ class one
 		}
 	}
 
-class two extends one
+class two extends one // inherit
 	{
-	override def message()
+	override def message() // override the method that was inherited
 		{
 		println("class two")
 		}
