@@ -1,4 +1,3 @@
-
 DATA results; * begin data step with given name;	
 INPUT name $ phy che mat; * specified input of the data ($ = string);	
 CARDS; * specifies that data lines follow;
