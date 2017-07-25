@@ -24,5 +24,11 @@ PROC CORR DATA = results; * run the correlation procedure on the data;
 
 PROC UNIVARIATE DATA = results; * run the univariate procedure on the data;
 	VAR phy che; * only run on these variables;
+	
+PROC CHART DATA = results; * run the chart (histogram) procedure on the data;
+	VBAR phy che mat; * vertical chart for these variables;
+	
+PROC CHART DATA = results; * run the chart (histogram) procedure on the data;
+	HBAR phy che mat; * horizontal chart for these variables;
 
 RUN;
