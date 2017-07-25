@@ -13,5 +13,6 @@ CARDS; * specifies that data lines follow;
 	Anton,65,75,90
 	
 PROC FREQ DATA = results; * runs buildin freq function;
+	TABLE phy che mat; * limit freq function to these variables;
 
 RUN;
