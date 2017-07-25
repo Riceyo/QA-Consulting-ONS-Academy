@@ -18,5 +18,5 @@ CARDS; * specifies that data lines follow;
 	Anton,65,75,90	
 ; * end data;
 
-PROC GCHART DATA = results; * run the chart (histogram) procedure on the data;
-	VBAR phy/DISCRETE; * vertical chart for these variables;
+PROC GCHART DATA = results; * run the gchart procedure on the data;
+	VBAR phy/DISCRETE; * treats variable as discrete;
