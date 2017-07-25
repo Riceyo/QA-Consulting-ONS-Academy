@@ -11,6 +11,8 @@ LENGTH name $ 20; * set length of the name variable to max 20;
 
 INPUT name $ phy che mat; * specified input of the data ($ = string);
 
+LABEL phy = "physics"; LABEL che = "chemistry"; LABEL mat = "mathematics";
+
 CARDS; * specifies that data lines follow;
 	Richmond,70,75,85
 	Luke,65,90,85
@@ -20,3 +22,9 @@ CARDS; * specifies that data lines follow;
 
 PROC GCHART DATA = results; * run the gchart procedure on the data;
 	VBAR phy/DISCRETE; * treats variable as discrete;
+
+PROC GCHART DATA = results; * run the gchart procedure on the data;
+	VBAR che/DISCRETE; * treats variable as discrete;
+	
+PROC GCHART DATA = results; * run the gchart procedure on the data;
+	VBAR mat/DISCRETE; * treats variable as discrete;
