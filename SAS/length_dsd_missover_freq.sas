@@ -2,7 +2,7 @@ DATA results; * begin data step with given name;
 
 INFILE DATALINES DSD MISSOVER; * DSD = Delimiter Sensitive Data; * MISSOVER = set missing variables/records if end of line;
 
-LENGTH name $ 20; * set length of the name variable/record to 20;
+LENGTH name $ 20; * set length of the name variable/record to max 20;
 
 INPUT name $ phy che mat; * specified input of the data ($ = string);
 
