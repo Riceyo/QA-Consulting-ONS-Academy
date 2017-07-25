@@ -20,6 +20,8 @@ CARDS; * specifies that data lines follow;
 	Anton,65,75,90	
 ; * end data;
 
+PROC PRINT LABEL;
+
 PROC GCHART DATA = results; * run the gchart procedure on the data;
 	VBAR phy/DISCRETE; * treats variable as discrete;
 
