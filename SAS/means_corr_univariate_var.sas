@@ -23,6 +23,6 @@ PROC MEANS DATA = results; * run the means procedure on the data;
 PROC CORR DATA = results; * run the correlation procedure on the data;
 
 PROC UNIVARIATE DATA = results; * run the univariate procedure on the data;
-	var phy che; * only run on these variables;
+	VAR phy che; * only run on these variables;
 
 RUN;
