@@ -15,6 +15,7 @@ CARDS; * specifies that data lines follow;
 	Luke,80,90,85
 	David,90,95,85
 	Anton,65,75,90	
+;
 
 PROC PRINT NOOBS; * print data without observation numbers;
 
