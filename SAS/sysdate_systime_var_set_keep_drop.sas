@@ -1,7 +1,7 @@
 DATA results; * begin data step with given name;
 
 TITLE1 "Student Results Data"; * give the data set a title;
-TITLE2 "&SYSDATE &SYSTIME"; * multiple titles;
+TITLE2 "&SYSDATE &SYSTIME"; * multiple titles; * get date and time from system;
 
 FOOTNOTE1 "QA Consulting 2017"; * give the data set a footnote;
 FOOTNOTE2 "Office for National Statistics 2017"; * multiple footnotes;
