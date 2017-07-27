@@ -1,4 +1,7 @@
-csv = read.csv("c:\\piratebay.csv")
+#install.packages("ggplot2")
+library(ggplot2)
+
+csv = read.csv("c:\\thepiratebay.csv")
 
 df <- data.frame(csv)
 
@@ -28,3 +31,13 @@ plot(df$size, df$pop, pch=21, col="red", bg="yellow"
 plot(df$size, df$category, pch=21, col="red", bg="yellow"
      ,main="torrent data", sub="category to popularity"
      ,xlab="category", ylab="popularity")
+
+ggplot(df,aes(size,pop))+geom_point()
+ggplot(df,aes(category,pop))+geom_point()
+
+splitcat <- split(df, df$category) # split data frame by category
+ggplot(splitcat[[1]], aes(size, pop))+geom_point(color=3, shape=3)
+ggplot(splitcat[[2]], aes(size, pop))+geom_point(color=10, shape=8)
+ggplot(splitcat[[3]], aes(size, pop))+geom_point(color=1, shape=11)
+ggplot(splitcat[[4]], aes(size, pop))+geom_point(color=4, shape=21)
+ggplot(splitcat[[5]], aes(size, pop))+geom_point(color=6, shape=25)
