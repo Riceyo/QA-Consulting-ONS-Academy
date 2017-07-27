@@ -5,16 +5,17 @@ conf = SparkConf()
 sc = SparkContext(conf = conf)
 sql = SQLContext(sc)
 
-def splitrecord(rec):
-	record=rec.split("|")
-	return int(record[0]),int(record[1]),record[2],record[3],int(record[4])
+def splitrecord(data):
+	record = data.split("|")
+	return int(data[0]), int(data[1]), data[2], data[3], int(data[4])
 
 rdd = sc.textFile("file:///home/cloudera/Users.txt")
 rddheader = rdd.first() # create rdd of the header only
 rddnoheader = rdd.filter(lambda line: line != rddheader) # create rdd with the header removed
 rddsplit = rddnoheader.map(lambda x: x.encode("ascii", "ignore").split("|")) # convert data and split the data by pipe
-df = sql.createDataFrame(rddsplit) # create data frame from rdd
+rdddefsplit = rddnoheader.map(splitrecord) # split the data via function
 
+df = sql.createDataFrame(rddsplit) # create data frame from rdd
 df.show() # print the whole data frame
 df.printSchema() # print the data frame schema
 df.select("_2").show() # print only the second column
@@ -26,26 +27,21 @@ df.filter((df._2 < 25) & (df._3 == "M")).select(df._4).show() # filter data and 
 df.sort(df._2.desc()).show() # order data by column
 
 dfheader = sql.createDataFrame(rddsplit, ['id','age','gender','job','score']) # create data frame from rdd with header
-
 dfheader.show() # print the whole data frame
 dfheader.printSchema() # print the data frame schema
-#----------------------
-rddA= sc.textFile("file:///home/cloudera/Users.txt")
-rddheader = rddA.first() # create rdd of the header only
-rddnoheaderA = rddA.filter(lambda line: line != rddheader) # create rdd with the header removed
-records=rddnoheaderA.map(splitrecord)
-#------------------------
-schema = StructType([
-		StructField('id', LongType(), True)
-		,StructField('age', LongType(), True)
-		,StructField('gender', StringType(), True)
-		,StructField('job', StringType(), True)
-		,StructField('score', LongType(), True)
+
+schema = StructType
+([
+	StructField('id', LongType(), True)
+	,StructField('age', LongType(), True)
+	,StructField('gender', StringType(), True)
+	,StructField('job', StringType(), True)
+	,StructField('score', LongType(), True)
 ])
 
-dfschemaheader = sql.createDataFrame(records, schema) # create data frame from rdd with header
+dfschemaheader = sql.createDataFrame(rdddefsplit, schema) # create data frame from rdd with schema
+dfschemaheader.printSchema() # print the whole data frame
+dfschemaheader.show() # print the data frame schema
 
-dfcollect = df.select(["_2", "_3"]).collect() # collect data frame into list
-dfschemaheader.printSchema()
-dfschemaheader.show()
+listrow = df.select(["_2", "_3"]).collect() # collect data frame into list of row
 #print(dfcollect)
