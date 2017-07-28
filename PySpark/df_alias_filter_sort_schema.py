@@ -6,8 +6,8 @@ sc = SparkContext(conf = conf)
 sql = SQLContext(sc)
 
 def splitrecord(data):
-	record = data.split("|")
-	return int(data[0]), int(data[1]), data[2], data[3], int(data[4])
+	datasplit = data.split("|")
+	return int(datasplit[0]), int(datasplit[1]), datasplit[2], datasplit[3], int(datasplit[4])
 
 rdd = sc.textFile("file:///home/cloudera/Users.txt")
 rddheader = rdd.first() # create rdd of the header only
@@ -30,8 +30,7 @@ dfheader = sql.createDataFrame(rddsplit, ['id','age','gender','job','score']) # 
 dfheader.show() # print the whole data frame
 dfheader.printSchema() # print the data frame schema
 
-schema = StructType
-([
+schema = StructType([
 	StructField('id', LongType(), True)
 	,StructField('age', LongType(), True)
 	,StructField('gender', StringType(), True)
